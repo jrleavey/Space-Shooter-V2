@@ -109,7 +109,8 @@ public class SpawnManager : MonoBehaviour
                     CallTheWave();
                     break;
                 case 9:
-                    CallTheBoss();
+                    CallTheWave();
+                    //CallTheBoss();
                     break;
 
 
