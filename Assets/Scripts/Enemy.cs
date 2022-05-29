@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     public GameObject enemyLaser;
     public GameObject enemyShield;
     public GameObject enemyBomb;
+    private GameObject spawnManager;
 
     public float enemySpeed = 4f;
     public float fireRate =  1f;
@@ -31,6 +32,7 @@ public class Enemy : MonoBehaviour
         animator = GetComponent<Animator>();
         collider = GetComponent<BoxCollider2D>();
         audioSource = GetComponent<AudioSource>();
+        spawnManager = GameObject.Find("Spawn Manager");
 
         int shieldChance = Random.Range(0, 100);
 
@@ -131,10 +133,15 @@ public class Enemy : MonoBehaviour
             case 3:
                 if (Time.time > nextFire && collider.isActiveAndEnabled == true && Time.time > 3f && transform.position.y == 4.5f)
                 {
-                    fireRate = 3f;
-                    nextFire = Time.time + fireRate;
-                    Instantiate(enemyLaser, transform.position + new Vector3(0, 0.0f, 0), Quaternion.identity);
-                    AudioSource.PlayClipAtPoint(laserSound, transform.position);
+                    EnemyStrafe();
+                    float transformOffset = Player.transform.position.x - transform.position.x;
+                    if (transformOffset <= .01f && transformOffset >= -.01f)
+                    {
+                        fireRate = 3f;
+                        nextFire = Time.time + fireRate;
+                        Instantiate(enemyLaser, transform.position + new Vector3(0, 0.0f, 0), Quaternion.identity);
+                        AudioSource.PlayClipAtPoint(laserSound, transform.position);
+                    }
                 }
                 break;
         }
@@ -161,6 +168,8 @@ public class Enemy : MonoBehaviour
                 enemySpeed = 0;
                 GetComponent<Collider2D>().enabled = false;
                 AudioSource.PlayClipAtPoint(onDeathSound, transform.position);
+                spawnManager.GetComponent<SpawnManager>()._enemyDeathcount++;
+
                 Destroy(this.gameObject, 2.5f);
 
             }
@@ -183,6 +192,7 @@ public class Enemy : MonoBehaviour
                 enemySpeed = 0;
                 GetComponent<Collider2D>().enabled = false;
                 AudioSource.PlayClipAtPoint(onDeathSound, transform.position);
+                spawnManager.GetComponent<SpawnManager>()._enemyDeathcount++;
                 Destroy(this.gameObject, 2.3f);
             }
         }
@@ -200,6 +210,7 @@ public class Enemy : MonoBehaviour
             enemySpeed = 0;
             GetComponent<Collider2D>().enabled = false;
             AudioSource.PlayClipAtPoint(onDeathSound, transform.position);
+            spawnManager.GetComponent<SpawnManager>()._enemyDeathcount++;
             Destroy(this.gameObject, 2.3f);
         }
     }    
@@ -207,5 +218,19 @@ public class Enemy : MonoBehaviour
     public IEnumerator DelayFireMethod()
     {
         yield return new WaitForSeconds(3f);
+    }
+
+    public void EnemyStrafe()
+    {
+        float transformOffset = Player.transform.position.x - transform.position.x;
+        if (transformOffset > 0)
+        {
+            transform.Translate(Vector3.left * Time.deltaTime);
+        }
+        else if (transformOffset < 0)
+        {
+            transform.Translate(Vector3.right * Time.deltaTime);
+
+        }
     }
 }

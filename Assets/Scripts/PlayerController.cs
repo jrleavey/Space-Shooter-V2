@@ -211,13 +211,17 @@ public class PlayerController : MonoBehaviour
         isTripleShotActive = true;
         isGiantLaserActive = false;
         currentAmmo = currentAmmo + 10;
+        ammoCountText.color = Color.green;
         StartCoroutine(TripleShotCooldown());
+
     }
     public void GiantLaserActivated()
     {
         isGiantLaserActive = true;
         isTripleShotActive = false;
         currentAmmo = currentAmmo + 10;
+        ammoCountText.color = Color.green;
+
     }
 
     public void SpeedBoostActivated()

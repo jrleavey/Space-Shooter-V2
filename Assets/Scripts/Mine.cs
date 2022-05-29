@@ -10,9 +10,6 @@ public class Mine : MonoBehaviour
     private AudioSource audiosource;
     public AudioClip explosionSound;
     public float mineSpeed = 1;
-
-    private bool isMineArmed = false;
-
     float timeLeft;
     Color targetColor;
 

@@ -37,7 +37,7 @@ public class Asteroid : MonoBehaviour
             animator.SetTrigger("AsteroidExplosion");
             Destroy(collider);
             AudioSource.PlayClipAtPoint(onDeathSound, transform.position);
-            SpawnManager.GetComponent<SpawnManager>().StartTheGame();
+            SpawnManager.GetComponent<SpawnManager>().StartWaveSystem();
             Destroy(this.gameObject, 2.5f);
 
         }
