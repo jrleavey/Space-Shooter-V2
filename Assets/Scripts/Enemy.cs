@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
     private Animator animator;
     private Collider2D collider;
+
+    public Slider bossHP;
 
     private GameObject Player;
     public GameObject enemyLaser;
@@ -34,18 +37,21 @@ public class Enemy : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         spawnManager = GameObject.Find("Spawn Manager");
 
-        int shieldChance = Random.Range(0, 100);
-
-        if (shieldChance >= 50)
+        if (enemyID != 4)
         {
-            shieldOn = true;
-        }
-        else
-        {
-            shieldOn = false;
-        }
-        enemyShield.SetActive(shieldOn);
+            int shieldChance = Random.Range(0, 100);
 
+            if (shieldChance >= 50)
+            {
+                shieldOn = true;
+            }
+            else
+            {
+                shieldOn = false;
+            }
+            enemyShield.SetActive(shieldOn);
+
+        }
         if(enemyID != 0)
         {
             transform.rotation = Quaternion.Euler(0, 0, 180);
@@ -72,7 +78,16 @@ public class Enemy : MonoBehaviour
                 transform.Translate(Vector3.up * enemySpeed * Time.deltaTime);
                 break;
             case 2: // harasser
+                Vector3 direction = Player.transform.position - transform.position;
+                direction.Normalize();
+
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                transform.rotation = Quaternion.Euler(Vector3.forward * (angle - 90f));
+
                 transform.Translate(Vector3.up * enemySpeed * Time.deltaTime);
+
+
                 break;
             case 3: // sniper
                 transform.Translate(Vector3.up * enemySpeed * Time.deltaTime);
@@ -81,24 +96,19 @@ public class Enemy : MonoBehaviour
                     transform.position = new Vector3(transform.position.x, 4.5f, 0);
                 }
                 break;
+            case 4:
+                // Boss
+                transform.Translate(Vector3.up * enemySpeed * Time.deltaTime);
+                if (transform.position.y <= 4.75)
+                {
+                    transform.position = new Vector3(0, 4.75f, 0);
+                }
+                break;
         }      
     }
 
     public void EnemyBoundary()
     {
-
-        switch (enemyID)
-        {
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-
-        }
         if (transform.position.y < -5f)
         {
             float randomX = Random.Range(-8f, 8f);
@@ -129,6 +139,7 @@ public class Enemy : MonoBehaviour
                 }
                 break;
             case 2:
+                // Has no combat data, rams player in movement code. This code is an intentional placeholder for the array.
                 break;
             case 3:
                 if (Time.time > nextFire && collider.isActiveAndEnabled == true && Time.time > 3f && transform.position.y == 4.5f)
@@ -143,6 +154,9 @@ public class Enemy : MonoBehaviour
                         AudioSource.PlayClipAtPoint(laserSound, transform.position);
                     }
                 }
+                break;
+            case 4:
+                //boss stuff
                 break;
         }
     }

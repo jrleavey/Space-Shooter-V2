@@ -12,6 +12,7 @@ public class SpawnManager : MonoBehaviour
 
     public bool isWaiting = false;
     private bool canSpawnMore = true;
+    private bool hasTheBossSpawned = false;
 
     private int[] powerUpSpawnChance =
     {
@@ -32,7 +33,7 @@ public class SpawnManager : MonoBehaviour
     {
         while (Player != null)
         {
-           if (canSpawnMore == true)
+           if (canSpawnMore == true && _WaveID != 10)
             {
                 Vector3 enemySpawnPosition = new Vector3(Random.Range(-8f, 8f), 7, 0);
                 GameObject newEnemy = Instantiate(enemyType[Random.Range(0, 4)], enemySpawnPosition, Quaternion.Euler(0, 0, 0));
@@ -108,7 +109,7 @@ public class SpawnManager : MonoBehaviour
                     CallTheWave();
                     break;
                 case 9:
-                    // Boss
+                    CallTheBoss();
                     break;
 
 
@@ -129,19 +130,28 @@ public class SpawnManager : MonoBehaviour
 
     public void CallTheWave()
     {
-        Debug.Log("Call the wave");
         if (enemiesSpawned >= 10)
         {
-            Debug.Log("Can't spawn more");
             canSpawnMore = false;
         }
 
         if (isWaiting == false &&_enemyDeathcount >= 10)
         {
-            Debug.Log("CanSpawnMore");
             enemiesSpawned = 0;
 
             StartCoroutine(WaitForNextWave());
+        }
+    }
+    public void CallTheBoss()
+    {
+        if (hasTheBossSpawned == false)
+        {
+            hasTheBossSpawned = true;
+            Vector3 enemySpawnPosition = new Vector3(0, 10, 0);
+            GameObject newEnemy = Instantiate(enemyType[4], enemySpawnPosition, Quaternion.Euler(0, 0, 0));
+            newEnemy.transform.parent = enemyContainer.transform;
+            canSpawnMore = false;
+            StopCoroutine(SpawnEnemy());
         }
     }
 

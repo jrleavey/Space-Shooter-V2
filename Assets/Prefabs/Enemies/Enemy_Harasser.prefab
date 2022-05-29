@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af018999aac751d40b63229d37d3f449, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bossHP: {fileID: 0}
   enemyLaser: {fileID: 3807479960393803830, guid: 790bbe7b28d7ce94a8a21b3931e98b42, type: 3}
   enemyShield: {fileID: 6063697698913576952}
   enemyBomb: {fileID: 2103644443507960831, guid: c146a0c699050eb42ae8cc4a57ad1d50, type: 3}
@@ -156,7 +157,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!95 &80148043766917096
 Animator:
   serializedVersion: 3
